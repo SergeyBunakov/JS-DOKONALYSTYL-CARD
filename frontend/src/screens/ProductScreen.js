@@ -51,12 +51,13 @@ const ProductScreen = {
               </li>
               <li>
                 Status:
-                ${product.countInStock > 0 ? `<span class="success">In Stock</span>`:
-                `<span class="errer">Unavailabel</span>`
-              }
+                  ${product.countInStock > 0 
+                    ? `<span class="success">In Stock</span>`
+                    : `<span class="error">Unavailabel</span>`
+                  }
               </li>
               <li>
-                <button id="add-button" class="primary">Add to Cart</button>
+                <button id="add-button" class="fw primary">Add to Cart</button>
               </li>
             </ul>
           </div>
