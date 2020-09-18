@@ -9,11 +9,9 @@ import Rating from '../components/Rating';
 const ProductScreen = {
   after_render: () => {
     const request = parseRequestUrl();
-    document.getElementBiId('add-button').addEventListener('click',
-      () => {
-        document.location.hash = `/cart/${request.id}`;
-      }
-    )
+    document.getElementById('add-button').addEventListener('click', () => {
+      document.location.hash = `/cart/${request.id}`;
+    });
   },
   render: async () => {
     const request = parseRequestUrl();
