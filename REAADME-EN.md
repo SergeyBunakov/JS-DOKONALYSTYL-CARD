@@ -189,7 +189,7 @@ Feel free to take a look at the course preview and enroll if it is along with yo
     5. export MONGODB_URL
     6. create models/userModel.js
     7. create userSchema and userModel
-    8. create userRoute
+    8. create   
     9. create createadmin route
 20. Sign-in Screen UI
     1. create SigninScreen
