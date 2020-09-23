@@ -2,10 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import data from './data';
-import config from "./config";
-import userRouter from "./routers/userRouter";
-
-
+import config from './config';
+import userRouter from './routers/userRouter';
 
 mongoose
   .connect(config.MONGODB_URL, {
