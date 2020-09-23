@@ -8,7 +8,7 @@ userRouter.get("/createadmin", async (req, res) => {
     const user = new User({
       name: 'admin',
       email: 'admin@example.com',
-      password: 'jsdokonalystyle',
+      password: 'jsdokonalystyl',
       isAdmin: true,
     });
     const createdUser = await user.save();
