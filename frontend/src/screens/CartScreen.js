@@ -25,6 +25,14 @@ const addToCart = (item, forceUpdate = false) => {
     rerender(CartScreen);
   }
 };
+const removeFromCart = (id) => {
+  setCartItems(getCartItems().filter(x => x.product !== id));
+  if(id === parseRequestUrl().id){
+    document.location.hash = '/cart';
+  }else {
+    rerender(CartScreen);
+  }
+}
 
 const CartScreen = {
   after_render: () => {
@@ -37,6 +45,15 @@ const CartScreen = {
             qty: Number(e.target.value)
           }, true);
         });
+      });
+      const deleteButtons = document.getElementsByClassName("delete-button");
+      Array.from(deleteButtons).forEach(deleteButton => {
+        deleteButton.addEventListener('click', () => {
+          removeFromCart(deleteButton.id);
+        });
+      });
+      document.getElementById("checkout-button").addEventListener('click', () => {
+        document.location.hash = "/signin";
       });
   },
   render: async () => {
