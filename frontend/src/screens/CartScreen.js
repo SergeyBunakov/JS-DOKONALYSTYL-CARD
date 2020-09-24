@@ -1,36 +1,59 @@
-import {parseRequestUrl} from "../utils";
-import {getProduct} from "../api";
-import {getCartItems, setCartItems} from "../localStorage";
+import {
+  parseRequestUrl,
+  rerender
+} from "../utils";
+import {
+  getProduct
+} from "../api";
+import {
+  getCartItems,
+  setCartItems
+} from "../localStorage";
 
-const addProduct = (item, forceUpdate = false) => {
-    let cartItems = getCartItems();
-    const existItem = cartItems.find(x => x.product === item.product);
-    if (existItem) {
-        cartItems = cartItems.map((x) => x.product === item.product ? item : x);
-    } else {
-        cartItems = [...cartItems, item];
+const addToCart = (item, forceUpdate = false) => {
+  let cartItems = getCartItems();
+  const existItem = cartItems.find(x => x.product === item.product);
+  if (existItem) {
+    if (forceUpdate) {
+      cartItems = cartItems.map((x) => x.product === item.product ? item : x);
     }
-    setCartItems(cartItems);
+  } else {
+    cartItems = [...cartItems, item];
+  }
+  setCartItems(cartItems);
+  if (forceUpdate) {
+    rerender(CartScreen);
+  }
 };
 
 const CartScreen = {
-    after_render: () => {
-    },
-    render: async () => {
-        const request = parseRequestUrl();
-        if (request.id) {
-            const product = await getProduct(request.id);
-            addProduct({
-                product: product._id,
-                name: product.name,
-                image: product.image,
-                price: product.price,
-                countInStock: product.countInStock,
-                qty: 1,
-            })
-        }
-        const cartItems = getCartItems();
-        return `
+  after_render: () => {
+    const qtySelects = document.getElementsByClassName("qty-select"):
+      Array.from(qtySelects).forEach(qtySelect => {
+        qtySelect.addEventListener('change', (e) => {
+          const item = getCartItems().find(x => x.product === qtySelect.id);
+          addToCart({
+            ...item,
+            qty: Number(e.target.value)
+          }, true);
+        });
+      });
+  },
+  render: async () => {
+    const request = parseRequestUrl();
+    if (request.id) {
+      const product = await getProduct(request.id);
+      addProduct({
+        product: product._id,
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        countInStock: product.countInStock,
+        qty: 1,
+      })
+    }
+    const cartItems = getCartItems();
+    return `
         <div class="content cart">
             <div class="cart-list">
                 <ul class="cart-list-container">
@@ -54,7 +77,10 @@ const CartScreen = {
                             </div>
                             <div>
                                 Qty: <select class="qty-select" id="${item.product}">
-                                <option value="1">1</option>
+                                ${[...Array(item.countInStock).keys()].map(x => item.qty === x+1
+                                    ? `<option selected value="${x+1}">${x+1}</option>`
+                                    : `<option value="${x+1}">${x+1}</option>`
+                                    )}
                                 </select>
                                 <button type="button" class="delete-button" id="${item.product}">
                                     Delete
@@ -83,7 +109,7 @@ const CartScreen = {
             </div>
         </div>
         `;
-    }
+  }
 }
 
 export default CartScreen;
