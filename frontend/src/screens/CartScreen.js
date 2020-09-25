@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import {
   parseRequestUrl,
   rerender
@@ -12,7 +13,7 @@ import {
 
 const addToCart = (item, forceUpdate = false) => {
   let cartItems = getCartItems();
-  const existItem = cartItems.find(x => x.product === item.product);
+  const existItem = cartItems.find((x) => x.product === item.product);
   if (existItem) {
     if (forceUpdate) {
       cartItems = cartItems.map((x) => x.product === item.product ? item : x);
@@ -26,48 +27,48 @@ const addToCart = (item, forceUpdate = false) => {
   }
 };
 const removeFromCart = (id) => {
-  setCartItems(getCartItems().filter(x => x.product !== id));
-  if(id === parseRequestUrl().id){
+  setCartItems(getCartItems().filter((x) => x.product !== id));
+  if (id === parseRequestUrl().id) {
     document.location.hash = '/cart';
-  }else {
+  } else {
     rerender(CartScreen);
   }
-}
+};
 
 const CartScreen = {
   after_render: () => {
-    const qtySelects = document.getElementsByClassName("qty-select"):
-      Array.from(qtySelects).forEach(qtySelect => {
-        qtySelect.addEventListener('change', (e) => {
-          const item = getCartItems().find(x => x.product === qtySelect.id);
-          addToCart({
-            ...item,
-            qty: Number(e.target.value)
-          }, true);
-        });
+    const qtySelects = document.getElementsByClassName("qty-select");
+    Array.from(qtySelects).forEach((qtySelect) => {
+      qtySelect.addEventListener('change', (e) => {
+        const item = getCartItems().find((x) => x.product === qtySelect.id);
+        addToCart({
+          ...item,
+          qty: Number(e.target.value)
+        }, true);
       });
-      const deleteButtons = document.getElementsByClassName("delete-button");
-      Array.from(deleteButtons).forEach(deleteButton => {
-        deleteButton.addEventListener('click', () => {
-          removeFromCart(deleteButton.id);
-        });
+    });
+    const deleteButtons = document.getElementsByClassName('delete-button');
+    Array.from(deleteButtons).forEach((deleteButton) => {
+      deleteButton.addEventListener('click', () => {
+        removeFromCart(deleteButton.id);
       });
-      document.getElementById("checkout-button").addEventListener('click', () => {
-        document.location.hash = "/signin";
-      });
+    });
+    document.getElementById('checkout-button').addEventListener('click', () => {
+      document.location.hash = "/signin";
+    });
   },
   render: async () => {
     const request = parseRequestUrl();
     if (request.id) {
       const product = await getProduct(request.id);
-      addProduct({
+      addToCart({
         product: product._id,
         name: product.name,
         image: product.image,
         price: product.price,
         countInStock: product.countInStock,
         qty: 1,
-      })
+      });
     }
     const cartItems = getCartItems();
     return `
@@ -79,9 +80,9 @@ const CartScreen = {
                         <div>Price</div>
                     </li>  
                     ${
-            cartItems.length === 0 ? '' +
+            cartItems.length === 0 ?
                 '<div>Cart is empty. <a href="/#/">Go Sopping</a>' :
-                cartItems.map(item => `
+                cartItems.map((item) => `
                     <li>
                         <div class="cart-image">
                             <img src="${item.image}" alt="${item.name}" />
@@ -94,7 +95,7 @@ const CartScreen = {
                             </div>
                             <div>
                                 Qty: <select class="qty-select" id="${item.product}">
-                                ${[...Array(item.countInStock).keys()].map(x => item.qty === x+1
+                                ${[...Array(item.countInStock).keys()].map((x) => item.qty === x+1
                                     ? `<option selected value="${x+1}">${x+1}</option>`
                                     : `<option value="${x+1}">${x+1}</option>`
                                     )}
@@ -126,7 +127,7 @@ const CartScreen = {
             </div>
         </div>
         `;
-  }
-}
+  },
+};
 
 export default CartScreen;
