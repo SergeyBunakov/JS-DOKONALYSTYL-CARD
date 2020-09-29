@@ -5,12 +5,14 @@ import {
 } from "./utils";
 import Error404Screen from "./screens/Error404Screen";
 import CartScreen from "./screens/CartScreen";
+import SigninScreen from "./screens/SigninScreen";
 
 const routes = {
   '/': HomeScreen,
   '/product/:id': ProductScreen,
   '/cart/:id': CartScreen,
-  '/cart': CartScreen
+  '/cart': CartScreen,
+    '/signin': SigninScreen,
 };
 const router = async () => {
   const request = parseRequestUrl();
